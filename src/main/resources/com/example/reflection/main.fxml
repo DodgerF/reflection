@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.reflection.MenuController">
+   <children>
+      <HBox layoutX="177.0" layoutY="334.0" prefHeight="66.0" prefWidth="249.0">
+         <children>
+            <Button onAction="#personButtonClicked" mnemonicParsing="false" prefHeight="40.0" prefWidth="68.0" text="Person" translateX="10.0" translateY="15.0" />
+            <Button onAction="#carButtonClicked" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="68.0" text="Car" translateX="100.0" translateY="15.0" />
+         </children>
+      </HBox>
+      <Label fx:id="carText" alignment="TOP_LEFT" layoutX="352.0" layoutY="71.0" prefHeight="129.0" prefWidth="130.0" text="Car:" />
+      <Label fx:id="personText" alignment="TOP_LEFT" layoutX="170.0" layoutY="71.0" prefHeight="129.0" prefWidth="130.0" text="Person:" />
+   </children>
+</AnchorPane>

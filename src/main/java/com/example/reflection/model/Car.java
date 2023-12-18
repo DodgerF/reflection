@@ -4,14 +4,8 @@ import com.example.reflection.annotation.ToRedact;
 
 public class Car {
     @ToRedact
-    private boolean isForeignCar;
-    @ToRedact
     private String name;
     private double price;
-
-    public boolean isForeignCar() {
-        return isForeignCar;
-    }
 
     public String getName() {
         return name;
@@ -19,10 +13,6 @@ public class Car {
 
     public double getPrice() {
         return price;
-    }
-
-    public void setForeignCar(boolean foreignCar) {
-        isForeignCar = foreignCar;
     }
 
     public void setName(String name) {

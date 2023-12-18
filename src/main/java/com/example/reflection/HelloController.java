@@ -1,7 +1,6 @@
 package com.example.reflection;
 
 import com.example.reflection.annotation.ToRedact;
-import com.example.reflection.model.Person;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -15,24 +14,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public class HelloController implements Initializable {
+public class HelloController {
     private final Map<TextField, Field> fields = new HashMap();
-    private Person person = new Person();
-    private Label label = new Label();
+    private Object _object;
 
     @FXML
     private VBox box;
 
     public HelloController() {
-
     }
+    public void setObject(Object object) {
+        _object = object;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        box.getChildren().add(label);
+        //box.getChildren().add(label);
 
-        Class<?> clazz = person.getClass();
-
+        Class<?> clazz = _object.getClass();
         for (Field field : clazz.getDeclaredFields()) {
             if (field.isAnnotationPresent(ToRedact.class)) {
                 field.setAccessible(true);
@@ -42,11 +38,10 @@ public class HelloController implements Initializable {
                 hBox.getChildren().add(textField);
                 fields.put(textField, field);
                 box.getChildren().add(hBox);
-
             }
-
         }
     }
+
 
     @FXML
     public void click() throws IllegalAccessException{
@@ -54,7 +49,7 @@ public class HelloController implements Initializable {
             System.out.println(f.getType());
             if (f.getType() == String.class) {
                 try {
-                    f.set(person, tf.getText());
+                    f.set(_object, tf.getText());
                 }
                 catch (Exception exception) {
                     exception.printStackTrace();
@@ -64,7 +59,7 @@ public class HelloController implements Initializable {
 
             else if (f.getType() == int.class) {
                 try {
-                    f.set(person, Integer.parseInt(tf.getText()));
+                    f.set(_object, Integer.parseInt(tf.getText()));
                 }
                 catch (Exception exception) {
                     exception.printStackTrace();
@@ -73,7 +68,7 @@ public class HelloController implements Initializable {
 
             else if (f.getType() == double.class) {
                 try {
-                    f.set(person, Double.parseDouble(tf.getText()));
+                    f.set(_object, Double.parseDouble(tf.getText()));
                 }
                 catch (Exception exception) {
                     exception.printStackTrace();
@@ -85,11 +80,11 @@ public class HelloController implements Initializable {
 
     private void update() throws IllegalAccessException{
         var builder = new StringBuilder();
-        Class<?> clazz = person.getClass();
+        Class<?> clazz = _object.getClass();
         for (Field declaredField : clazz.getDeclaredFields()) {
             declaredField.setAccessible(true);
-            builder.append(declaredField.getName()).append(": ").append(declaredField.get(person)).append(";\n");
+            builder.append(declaredField.getName()).append(": ").append(declaredField.get(_object)).append(";\n");
         }
-        label.setText(builder.toString());
+        //label.setText(builder.toString());
     }
 }
