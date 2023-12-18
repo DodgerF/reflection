@@ -8,6 +8,7 @@ public class Person {
     private String name;
     @ToRedact
     private int age;
+    @ToRedact
     private double weight;
 
     public String getName() {

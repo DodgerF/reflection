@@ -31,15 +31,13 @@ public class HelloController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         box.getChildren().add(label);
 
-
-
         Class<?> clazz = person.getClass();
 
         for (Field field : clazz.getDeclaredFields()) {
             if (field.isAnnotationPresent(ToRedact.class)) {
                 field.setAccessible(true);
                 HBox hBox = new HBox();
-                hBox.getChildren().add(new Label(field.getName()));
+                hBox.getChildren().add(new Label("  " + field.getName() + "    "));
                 TextField textField = new TextField();
                 hBox.getChildren().add(textField);
                 fields.put(textField, field);
@@ -48,9 +46,6 @@ public class HelloController implements Initializable {
             }
 
         }
-
-        System.out.println(fields.size());
-
     }
 
     @FXML
