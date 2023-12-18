@@ -2,24 +2,18 @@ package com.example.reflection;
 
 import com.example.reflection.model.Car;
 import com.example.reflection.model.Person;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
+
 
 public class MenuController {
-    @FXML
-    private Button personButton;
-    @FXML
-    private Button carButton;
     @FXML
     private Label personLabel;
     @FXML
@@ -34,7 +28,13 @@ public class MenuController {
     public void carButtonClicked() {
         createStage(car);
     }
+
+    public MenuController() {
+        System.out.println(personLabel);
+        //person.setLabel(personLabel);
+    }
     private void createStage(Object object) {
+        person.setLabel(personLabel);
         FXMLLoader loader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
 
         Scene statisticScene = null;
@@ -47,7 +47,6 @@ public class MenuController {
         Stage statisticStage = new Stage();
         statisticStage.initModality(Modality.APPLICATION_MODAL);
         statisticStage.setScene(statisticScene);
-        statisticStage.setTitle("Statistics");
         statisticStage.setResizable(false);
         statisticStage.show();
         ((HelloController)loader.getController()).setObject(object);
