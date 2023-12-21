@@ -1,11 +1,7 @@
-package com.example.reflection.model;
+package com.example.reflection.models;
 
 
-import com.example.reflection.annotation.ToRedact;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import com.example.reflection.ToRedact;
 
 public class Person {
     @ToRedact
@@ -16,11 +12,13 @@ public class Person {
     private float weight;
     @ToRedact
     private char iChar;
+    private double money;
 
     public Person() {
         name = "unknown";
         age = 0;
         weight = 0f;
         iChar = '0';
+        money = 0.0;
     }
 }

@@ -1,7 +1,6 @@
-package com.example.reflection;
+package com.example.reflection.controllers;
 
 public class CharDecoder {
-
     public static char getChar(String input) {
         if (!input.matches("\\p{XDigit}+")) {
             return input.charAt(0);

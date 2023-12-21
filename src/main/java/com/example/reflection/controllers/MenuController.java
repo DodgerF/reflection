@@ -1,7 +1,8 @@
-package com.example.reflection;
+package com.example.reflection.controllers;
 
-import com.example.reflection.model.Car;
-import com.example.reflection.model.Person;
+import com.example.reflection.Main;
+import com.example.reflection.models.Car;
+import com.example.reflection.models.Person;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -37,20 +38,20 @@ public class MenuController implements Initializable {
     }
 
     private void createStage(Object object) {
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("hello-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("modal-view.fxml"));
 
         Scene statisticScene = null;
         try{
             statisticScene = new Scene(loader.load(), 300, 400);
         }
-        catch (Exception ignored){
-            System.out.println(ignored.getMessage());
+        catch (Exception ignore){
         }
         Stage statisticStage = new Stage();
         statisticStage.initModality(Modality.APPLICATION_MODAL);
         statisticStage.setScene(statisticScene);
         statisticStage.setResizable(false);
         statisticStage.show();
+
         ((ModalStageController)loader.getController()).setObject(object);
         ((ModalStageController)loader.getController()).setController(this);
     }

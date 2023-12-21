@@ -1,6 +1,6 @@
-package com.example.reflection;
+package com.example.reflection.controllers;
 
-import com.example.reflection.annotation.ToRedact;
+import com.example.reflection.ToRedact;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import static com.example.reflection.CharDecoder.getChar;
+import static com.example.reflection.controllers.CharDecoder.getChar;
 
 public class ModalStageController implements Initializable {
     private final Map<Control, Field> fields = new HashMap();
@@ -147,5 +147,6 @@ public class ModalStageController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         refresh();
+
     }
 }

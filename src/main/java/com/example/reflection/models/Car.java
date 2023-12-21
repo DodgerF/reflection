@@ -1,7 +1,6 @@
-package com.example.reflection.model;
+package com.example.reflection.models;
 
-import com.example.reflection.annotation.ToRedact;
-import javafx.scene.control.Label;
+import com.example.reflection.ToRedact;
 
 public class Car {
     @ToRedact
