@@ -1,34 +1,19 @@
 package com.example.reflection.model;
 
 import com.example.reflection.annotation.ToRedact;
+import javafx.scene.control.Label;
 
 public class Car {
     @ToRedact
     private String name;
     @ToRedact
     private boolean isForeignCar;
+    @ToRedact
     private double price;
 
-    public String getName() {
-        return name;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean isForeignCar() {
-        return isForeignCar;
-    }
-    public void setForeignCar(boolean foreignCar) {
-        isForeignCar = foreignCar;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
+    public Car() {
+        name = "unknown";
+        isForeignCar = false;
+        price = 0.0;
     }
 }

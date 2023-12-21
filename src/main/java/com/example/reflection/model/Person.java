@@ -13,42 +13,14 @@ public class Person {
     @ToRedact
     private int age;
     @ToRedact
-    private double weight;
-    @FXML
-    private Label label;
+    private float weight;
+    @ToRedact
+    private char iChar;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public double getWeight() {
-        return weight;
-    }
-
-    public void setWeight(double weight) {
-        this.weight = weight;
-    }
-
-    public void setLabel(Label label) {
-        this.label = label;
-        System.out.println(label);
-    }
-
-
-    public void changed() {
-
-        label.setText("name: " + name + "\n" + "age: " + age + "\n" + "weight: " + weight + "\n");
+    public Person() {
+        name = "unknown";
+        age = 0;
+        weight = 0f;
+        iChar = '0';
     }
 }
