@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -18,31 +19,32 @@ import java.util.ResourceBundle;
 
 public class MenuController implements Initializable {
     @FXML
-    private Label personLabel;
-    @FXML
-    private Label carLabel;
-
+    private Label label;
     private Car car;
     private Person person;
+    private Object object;
 
     public MenuController() {
         car = new Car();
         person = new Person();
+        object = person;
     }
 
-    public void personButtonClicked() {
-        createStage(person);
+    public void personButtonClicked() throws IllegalAccessException {
+        updateLabel(person);
+        object = person;
     }
-    public void carButtonClicked() {
-        createStage(car);
+    public void carButtonClicked() throws IllegalAccessException {
+        updateLabel(car);
+        object = car;
     }
 
-    private void createStage(Object object) {
+    public void createStage() {
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("modal-view.fxml"));
 
         Scene statisticScene = null;
         try{
-            statisticScene = new Scene(loader.load(), 300, 400);
+            statisticScene = new Scene(loader.load(), 250, 150);
         }
         catch (Exception ignore){
         }
@@ -59,24 +61,21 @@ public class MenuController implements Initializable {
     public void updateLabel(Object object) throws IllegalAccessException {
         var builder = new StringBuilder();
         Class<?> clazz = object.getClass();
-        builder.append(object.getClass().getSimpleName()).append(":\n");
+        builder.append(object.getClass().getSimpleName()).append(":\n\n");
         for (Field declaredField : clazz.getDeclaredFields()) {
             declaredField.setAccessible(true);
             builder.append(declaredField.getName()).append(": ").append(declaredField.get(object)).append("\n");
         }
-        if (clazz == car.getClass())
-            carLabel.setText(builder.toString());
-        if (clazz == person.getClass())
-            personLabel.setText(builder.toString());
+        label.setText(builder.toString());
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
             updateLabel(person);
-            updateLabel(car);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+
     }
 }

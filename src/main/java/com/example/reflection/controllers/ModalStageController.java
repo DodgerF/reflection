@@ -3,6 +3,7 @@ package com.example.reflection.controllers;
 import com.example.reflection.ToRedact;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
@@ -20,45 +21,34 @@ import java.util.ResourceBundle;
 
 import static com.example.reflection.controllers.CharDecoder.getChar;
 
-public class ModalStageController implements Initializable {
-    private final Map<Control, Field> fields = new HashMap();
+public class ModalStageController {
     private Object obj;
     private MenuController controller;
 
     @FXML
     private VBox box;
-    @FXML
-    private Text text;
 
-    private boolean isMistake;
-
-    @FXML
-    public void click() throws IllegalAccessException {
-        refresh();
-        getValuesFromFields();
-        controller.updateLabel(obj);
-        close();
-    }
     public void setObject(Object object) {
         obj = object;
+
+        box.setAlignment(Pos.CENTER);
 
         Class<?> clazz = obj.getClass();
         for (Field field : clazz.getDeclaredFields()) {
             if (field.isAnnotationPresent(ToRedact.class)) {
                 field.setAccessible(true);
-                HBox hBox = new HBox();
-                hBox.getChildren().add(new Label("  " + field.getName() + "    "));
-                Control control;
-                if (field.getType() == boolean.class)
-                {
-                    control = new CheckBox();
-                }
-                else {
-                    control = new TextField();
-                }
-                hBox.getChildren().add(control);
 
-                fields.put(control, field);
+                HBox hBox = new HBox();
+                hBox.getChildren().add(addText(field.getName()));
+
+                Control control;
+                if (field.getType() == boolean.class) {
+                    control = createCheckBox(field);
+                } else {
+                    control = createTextField(field);
+                }
+
+                hBox.getChildren().add(control);
                 box.getChildren().add(hBox);
             }
         }
@@ -66,87 +56,110 @@ public class ModalStageController implements Initializable {
     public void setController(MenuController c){
         controller = c;
     }
-    private void close(){
-        if (isMistake) {
-            text.setVisible(true);
-            return;
-        }
-        Stage stage = (Stage) text.getScene().getWindow();
-        stage.close();
+
+    private TextField addText(String string) {
+        TextField textField = new TextField(string);
+        textField.setDisable(true);
+        textField.setAlignment(Pos.CENTER);
+        double MAX_TEXT_WIDTH = 100;
+        textField.setMaxWidth(MAX_TEXT_WIDTH);
+        return textField;
     }
 
-    private void refresh() {
-        isMistake = false;
-        text.setVisible(false);
-    }
-    private void setMistake(TextField textField) {
-        textField.setStyle("-fx-text-fill: #B22222;");
-        isMistake = true;
-    }
-
-    private void getValuesFromFields() {
-        fields.forEach((control, f) -> {
-            control.setStyle("-fx-text-fill: #000000;");
-            if (f.getType() == String.class) {
+    private TextField createTextField(Field field) {
+        TextField textField = new TextField();
+        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            textField.setStyle("-fx-text-fill: #000000;");
+            if (!newValue) {
+                setFieldValue(field, textField);
                 try {
-                    if (((TextField)control).getText().isEmpty()){
-                        setMistake((TextField)control);
-                    }
-                    else {
-                        f.set(obj, ((TextField) control).getText());
-                    }
-                }
-                catch (Exception ignored) {
-                }
-
-            }
-            else if (f.getType() == char.class){
-                try {
-                    f.set(obj, getChar(((TextField)control).getText()));
-                }
-                catch (Exception ignored) {
-                    setMistake((TextField)control);
-                }
-            }
-
-            else if (f.getType() == int.class) {
-                try {
-                    f.set(obj, Integer.parseInt(((TextField)control).getText()));
-                }
-                catch (Exception ignored) {
-                    setMistake((TextField)control);
-                }
-            }
-            else if (f.getType() == float.class) {
-                try {
-                    f.set(obj, Float.valueOf(((TextField)control).getText()));
-                }
-                catch (Exception ignored) {
-                    setMistake((TextField)control);
-                }
-            }
-
-            else if (f.getType() == double.class) {
-                try {
-                    f.set(obj, Double.parseDouble(((TextField)control).getText()));
-                }
-                catch (Exception ignored) {
-                    setMistake((TextField)control);
-                }
-            }
-            else if (f.getType() == boolean.class){
-                try {
-                    f.set(obj, ((CheckBox)control).isSelected());
-                }
-                catch (Exception ignored) {
+                    controller.updateLabel(obj);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
                 }
             }
         });
+        return textField;
+    }
+    private CheckBox createCheckBox(Field field) {
+        CheckBox checkBox = new CheckBox();
+        checkBox.setOnMouseClicked(event -> {
+            setFieldValue(field, checkBox);
+            try {
+                controller.updateLabel(obj);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        return checkBox;
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        refresh();
-
+    private void setMistake(TextField textField) {
+        textField.setStyle("-fx-text-fill: #B22222;");
     }
+
+    private void setFieldValue(Field field, Control control) {
+        String value = null;
+
+        if (control.getClass().equals(TextField.class)) {
+            control.setStyle("-fx-text-fill: #000000;");
+            value = ((TextField) control).getText();
+        }
+
+        if (field.getType() == String.class) {
+            try {
+                if (value.isEmpty()){
+                    setMistake((TextField)control);
+                }
+                else {
+                    field.set(obj, ((TextField) control).getText());
+                }
+            }
+            catch (Exception ignored) {
+            }
+
+        }
+        else if (field.getType() == char.class){
+            try {
+                field.set(obj, getChar(value));
+            }
+            catch (Exception ignored) {
+                setMistake((TextField)control);
+            }
+        }
+
+        else if (field.getType() == int.class) {
+            try {
+                field.set(obj, Integer.parseInt(value));
+            }
+            catch (Exception ignored) {
+                setMistake((TextField)control);
+            }
+        }
+        else if (field.getType() == float.class) {
+            try {
+                field.set(obj, Float.valueOf(value));
+            }
+            catch (Exception ignored) {
+                setMistake((TextField)control);
+            }
+        }
+
+        else if (field.getType() == double.class) {
+            try {
+                field.set(obj, Double.parseDouble(value));
+            }
+            catch (Exception ignored) {
+                setMistake((TextField)control);
+            }
+        }
+        else if (field.getType() == boolean.class){
+            try {
+                field.set(obj, ((CheckBox)control).isSelected());
+            }
+            catch (Exception ignored) {
+            }
+        }
+    }
+
 }
