@@ -44,8 +44,18 @@ public class ModalStageController {
                 Control control;
                 if (field.getType() == boolean.class) {
                     control = createCheckBox(field);
+                    try {
+                        ((CheckBox) control).setSelected((boolean) (field.get(obj)));
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
                 } else {
                     control = createTextField(field);
+                    try {
+                        ((TextField) control).setText(String.valueOf(field.get(obj)));
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
 
                 hBox.getChildren().add(control);
@@ -67,6 +77,7 @@ public class ModalStageController {
     }
 
     private TextField createTextField(Field field) {
+
         TextField textField = new TextField();
         textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             textField.setStyle("-fx-text-fill: #000000;");

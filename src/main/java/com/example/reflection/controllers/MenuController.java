@@ -20,8 +20,8 @@ import java.util.ResourceBundle;
 public class MenuController implements Initializable {
     @FXML
     private Label label;
-    private Car car;
-    private Person person;
+    private final Car car;
+    private final Person person;
     private Object object;
 
     public MenuController() {
